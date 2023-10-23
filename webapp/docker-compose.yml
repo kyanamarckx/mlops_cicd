@@ -1,0 +1,33 @@
+version: '3'
+services:
+  webapp:
+    image: kyanam/webapp:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB=mongodb://database:27017/mydatabase
+    depends_on:
+      - database
+    volumes:
+      - /vagrant/webapp/database:/app/database
+
+  database:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=mydatabase
+    volumes:
+      - mongodb_data:/data/db
+
+  test:
+    build: .
+    depends_on:
+      - webapp
+      - database
+    environment:
+      - API_URL=http://webapp:3000
+    command: ["yarn", "test"]  # Command for running tests
+
+volumes:
+  mongodb_data:
