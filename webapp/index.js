@@ -38,7 +38,7 @@ app.use((err, _, res, next) => {
       error: err.message,
     });
   next();
-});
+}); 
 
 persistence
   .initialize()
